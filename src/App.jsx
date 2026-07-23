@@ -1,12 +1,12 @@
-import { useRef, useState, useCallback, useEffect } from 'react';
+import { useRef, useState, useCallback, useEffect } from "react";
 
-import Places from './components/Places.jsx';
-import Modal from './components/Modal.jsx';
-import DeleteConfirmation from './components/DeleteConfirmation.jsx';
-import logoImg from './assets/logo.png';
-import AvailablePlaces from './components/AvailablePlaces.jsx';
-import { fetchUserPlaces, updateUserPlaces } from './http.js';
-import Error from './components/Error.jsx';
+import Places from "./components/Places.jsx";
+import Modal from "./components/Modal.jsx";
+import DeleteConfirmation from "./components/DeleteConfirmation.jsx";
+import logoImg from "./assets/logo.png";
+import AvailablePlaces from "./components/AvailablePlaces.jsx";
+import { fetchUserPlaces, updateUserPlaces } from "./http.js";
+import Error from "./components/Error.jsx";
 
 function App() {
   const selectedPlace = useRef();
@@ -19,21 +19,7 @@ function App() {
 
   const [modalIsOpen, setModalIsOpen] = useState(false);
 
-  useEffect(() => {
-    async function fetchPlaces() {
-      setIsFetching(true);
-      try {
-        const places = await fetchUserPlaces();
-        setUserPlaces(places);
-      } catch (error) {
-        setError({ message: error.message || 'Failed to fetch user places.' });
-      }
-
-      setIsFetching(false);
-    }
-
-    fetchPlaces();
-  }, []);
+  useFetch();
 
   function handleStartRemovePlace(place) {
     setModalIsOpen(true);
@@ -62,7 +48,7 @@ function App() {
     } catch (error) {
       setUserPlaces(userPlaces);
       setErrorUpdatingPlaces({
-        message: error.message || 'Failed to update places.',
+        message: error.message || "Failed to update places.",
       });
     }
   }
@@ -71,24 +57,24 @@ function App() {
     async function handleRemovePlace() {
       setUserPlaces((prevPickedPlaces) =>
         prevPickedPlaces.filter(
-          (place) => place.id !== selectedPlace.current.id
-        )
+          (place) => place.id !== selectedPlace.current.id,
+        ),
       );
 
       try {
         await updateUserPlaces(
-          userPlaces.filter((place) => place.id !== selectedPlace.current.id)
+          userPlaces.filter((place) => place.id !== selectedPlace.current.id),
         );
       } catch (error) {
         setUserPlaces(userPlaces);
         setErrorUpdatingPlaces({
-          message: error.message || 'Failed to delete place.',
+          message: error.message || "Failed to delete place.",
         });
       }
 
       setModalIsOpen(false);
     },
-    [userPlaces]
+    [userPlaces],
   );
 
   function handleError() {
